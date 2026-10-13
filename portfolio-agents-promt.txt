@@ -1,0 +1,104 @@
+ПРОМТ: Создание лендинга-портфолио специалиста по вайбкодингу (HERO + «Избранные проекты» + «Что я делаю» + «Как я работаю» + CTA «Обсудить проект»)
+
+Создай с нуля одностраничный лендинг-портфолио вайбкодера. Работай строго по описанию ниже, ничего лишнего не добавляй и существующие секции не переписывай.
+
+1. СТАК И ИНСТРУМЕНТЫ
+- TanStack Start (SSR) + TanStack Router, React 19, TypeScript, Vite 8.
+- Tailwind CSS v4 (через @tailwindcss/vite), шрифт Manrope (400–800) подключается в root-layout ссылкой на Google Fonts.
+- UI-кит shadcn/ui (компоненты в src/components/ui), lucide-react для иконок.
+- Инструменты качества: ESLint (typescript-eslint + prettier-plugin) и Vitest + Testing Library.
+- Язык интерфейса — русский.
+
+2. СТРУКТУРА ПРОЕКТА
+- src/routes/__root.tsx — root-layout: html lang="ru", HeadContent/Scripts, подключение src/styles.css, favicon, базовые meta (title «Вайбкодинг-портфолио», description, og, twitter:card). Обязательно: <Outlet /> внутри QueryClientProvider.
+- src/routes/index.tsx — маршрут «/»: meta-теги страницы и компонент Index, который рендерит <main> с секциями в порядке: Hero, затем FeaturedProjects, затем Services, затем WorkProcess, затем Contact (CTA «Обсудить проект»); после <main> — <BackToTop /> (кнопка «наверх»).
+- src/components/back-to-top.tsx — кнопка «наверх» (возврат к hero).
+- src/components/hero.tsx — HERO-секция с заголовком.
+- src/components/featured-projects.tsx — секция «Избранные проекты».
+- src/components/services.tsx — секция «Что я делаю».
+- src/components/work-process.tsx — секция «Как я работаю».
+- src/components/contact.tsx — CTA-блок «Обсудить проект» (замыкающая секция с кнопками связи).
+- src/styles.css — глобальные стили: @import tailwindcss, @theme inline, :root/.dark с oklch-токенами, @layer base, затем все стили секций.
+- Соглашение: каждая секция — отдельный компонент, все её визуальные токены и стили живут только в глобальном src/styles.css (чтобы секцию можно было переиспользовать, не трогая другие секции).
+
+3. ДИЗАЙН-СИСТЕМА (токены в :root, все цвета в oklch)
+- --background: oklch(0.13 0.006 260) (тёмный фон), --foreground: oklch(0.96 0.004 260).
+- Токены портфолио: --portfolio-surface: oklch(0.165 0.008 260), --portfolio-muted: oklch(0.68 0.012 260), --portfolio-line: oklch(0.34 0.015 260), --portfolio-font: 'Manrope', sans-serif.
+- Неоновые акценты: --neon-cyan: oklch(0.85 0.15 190), --neon-red: oklch(0.68 0.23 23), --neon-soft: oklch(0.82 0.085 10), --preview-green: oklch(0.74 0.13 180).
+- Общие правила: карточки — тёмная поверхность, скругление 8px, цветная неон-обводка 1px и мягкое внешнее свечение (box-shadow), ховер — подъём на 5px и усиление свечения (в @media (hover:hover)); заголовки — Manrope 800; тонкие серые подписи (--portfolio-muted) мелким кеглем; движение отключается при prefers-reduced-motion.
+
+4. HERO-СЕКЦИЯ (src/components/hero.tsx)
+- Первая секция страницы. <section className="hero-section" id="hero" aria-labelledby="hero-title">: фон — brick-wall с тёмным градиентом (::before .34/.64) + циан-радиальное свечение слева сверху (::after); min-height 92svh; контент по центру вертикально; .hero-inner (max-width 1184px) — 2 колонки: слева .hero-copy (max-width 640px), справа .hero-visual с дашбордом (minmax(0,1fr) + minmax(360px,520px), gap 54px).
+- .hero-header: eyebrow «ВАЙБКОДИНГ · AI · АВТОМАТИЗАЦИЯ» (через .section-eyebrow); <h1 id="hero-title"> — 3 пункта ДРУГ ПОД ДРУГОМ (flex-direction column, gap 14px, font 46px/800, line-height 1.12; планшет 40px, мобильный 30px): каждая строка — .headline-item (row, gap 14px: квадрат-пиктограмма .point-icon слева + текст): 1) «Лендинги и MVP <span class="headline-accent">за 3 дня</span>» (акцент — --neon-cyan со свечением, иконка Zap), 2) «Голосовые и чат-боты TWIN» (иконка Bot — робот, акцент пункта — --preview-green), 3) «Bitrix24 и интеграции» (иконка Plug, акцент — --neon-soft). .point-icon: 34px (30px на мобильном), radius 7px, border + фоновая подсветка + inner-glow в цвет акцента пункта (по :nth-child); </h1>; подзаголовок «Собираю продающие страницы и запускаю продукты, внедряю голосовых и чат-ботов TWIN, автоматизирую бизнес на Bitrix24 — под ключ и в срок.» (max-width 520px).
+- .hero-actions — под подзаголовком две ЯКОРНЫЕ кнопки: основная .hero-btn-primary «Поставить задачу» со стрелкой → href="#contact" (градиентная заливка --neon-cyan -> --preview-green, тёмный текст, свечение) и .hero-btn-ghost «Смотреть проекты» с иконкой LayoutGrid → href="#projects" (прозрачный фон, рамка --portfolio-line, циан-иконка). Клик плавно прокручивает страницу (html { scroll-behavior: smooth } под @media (prefers-reduced-motion: no-preference)); ховер — подъём 2px и усиление свечения; focus-visible — циан-обводка.
+- Под кнопками .hero-points — 3 ПИЛЮЛИ-БЕЙДЖА в одну строку (flex-wrap, gap 10px, radius 999px, рамка --portfolio-line, тёмная подложка, font 11px): «Первый результат уже через 3 дня», «Дизайн и код — в одном лице», «Правки онлайн, без долгих спринтов» — слева иконка Check цвета циан.
+- .hero-visual -> .hero-dashboard (справа) — мокап аналитического дашборда в стиле секции: НЕОНОВАЯ ГРАДИЕНТНАЯ обводка 1px (linear-gradient 135deg: --neon-cyan -> --preview-green 45% -> --neon-soft, реализована через background padding-box + border-box при border: 1px solid transparent), radius 10px; фон темнее фона секции — oklch(0.128 0.006 260), близко к --background; циан-свечение; сверху .dash-bar (полоса хрома темнее фона — oklch(0.112 0.006 260); три цветные точки: --neon-soft/--preview-peach/--preview-green + адрес analytics.vibecode.app), затем .dash-head (.dash-brand с иконкой ChartNoAxesCombined + бейдж .dash-live LIVE с пульсирующей зелёной точкой).
+- .dash-kpis — 3 KPI-карточки с цифрами: «Выручка ₽ 1,28M +18,4%», «Клиенты 3 245 +7,2%», «Конверсия 6,8% +1,3%» (рост — --preview-green). .dash-panel — столбчатая диаграмма .dash-bars: 7 столбцов (Янв–Июл, высоты 38–97%) с вертикальным неоновым градиентом (--neon-soft -> --neon-cyan 45% -> --preview-green) и свечением на сетке-подложке. .dash-sources — круговая диаграмма .dash-donut (conic-gradient from -90deg с плавными переходами: циан ~39% / --preview-green ~72% / --preview-peach до 100%, центр «8,4K» на тёмном круге oklch(0.128 0.006 260)) + .dash-legend (Прямые 42%, Реклама 34%, Поиск 24%).
+- CTA-блок для связи НЕ здесь: он вынесен в отдельную замыкающую секцию в конце страницы (см. раздел 8).
+
+5. СЕКЦИЯ «ИЗБРАННЫЕ ПРОЕКТЫ» (src/components/featured-projects.tsx)
+- Обёртка: <section className="featured-section" id="projects" aria-labelledby="featured-title"> с фоном: <img className="brick-background"> (src/assets/brick-wall.jpg, alt="", 1536×1024, object-fit cover, opacity .47) + тёмный градиентный оверлей ::before; контент в .featured-inner (max-width 1184px). id="projects" нужен как якорь для кнопки «Смотреть проекты» в hero.
+- Шапка: eyebrow «ОТ ИДЕИ ДО ПРОДУКТА» (метка — светящаяся циан-точка через .section-eyebrow), <h1 id="featured-title">Избранные <span>проекты</span></h1> — БЕЗ точки в конце; слово «проекты» окрашено в --neon-cyan со свечением; подзаголовок «Идеи, которые стали работающими цифровыми продуктами.».
+- Сетка .project-grid: 3 карточки .project-card НА ДЕСКТОПЕ (repeat(3, minmax(0,1fr)), gap 25px); на планшете 701–1000px — 2 колонки (repeat(2, minmax(0,1fr)), gap 16px); на мобильном ≤700px — 1 колонка на всю ширину с увеличенным межкарточным отступом gap 44px.
+- ХОВЕР карточек (в @media (hover:hover), «выраженный»): подъём translateY(-8px) scale(1.01), усиленное свечение (0 0 30px, по теме: twin — циан, analytics — --neon-soft, launch — --neon-red) + глубокая тень 0 14px 26px, обводка светлеет по теме карточки.
+- Карточки проектов (массив данных в компоненте):
+  1) Голосовые и чат-боты TWIN, категория «AI · Агенты», номер 01, тема preview/twin: «Виртуальный сотрудник на базе TWIN: принимает звонки, отвечает в мессенджерах и записывает клиентов.», теги: TWIN, OpenAI, Telegram · WhatsApp, REST API.
+  2) НейроАналитик, категория «AI · АНАЛИТИКА», номер 02, тема analytics: «AI-сервис для анализа данных. Превращает сложные таблицы в понятные выводы и наглядные отчёты.», теги: Python, React, OpenAI, Pandas.
+  3) LaunchPro, категория «WEB · ЛЕНДИНГ», номер 03, тема launch: «Лендинг для запуска продукта. Выразительный дизайн, чёткая структура и фокус на конверсии.», теги: React, TypeScript, Tailwind CSS, Framer Motion.
+- В левом нижнем углу каждой карточки — ссылка .project-more «Детальнее →» (inline-flex, gap 6px, font 11px/700, цвет --portfolio-muted, без подчёркивания, стрелка lucide ArrowRight 13px; подложена вниз через margin-top:auto + align-self:flex-start, padding-top 22px). Ховер: цвет меняется на --neon-cyan со свечением (text-shadow) — в @media (hover:hover). НА МОБИЛЬНОМ (≤700px) «Детальнее» — КРУПНАЯ КНОПКА (font 14px, padding 11px 18px, рамка циан 1px + фон/свечение циан, стрелка 15px). ССЫЛКИ ПОКА НЕАКТИВНЫ: href="#", aria-disabled="true", onClick делает preventDefault — страниц с детальным описанием ещё нет, ведут на будущие роуты проектов.
+- Цвет обводок: карточка twin — циан (дефолт), analytics — --neon-soft, launch — --neon-red (классы .card-analytics/.card-launch).
+- Превью (.project-preview, aspect-ratio 1.53): мокап интерфейса в рамке браузера (три точки + адрес twin-bot.app / neuroanalytics.ai / launchpro.site). twin — светлый МЕССЕНДЖЕР-ЧАТ ассистента TWIN: шапка с аватаром-роботом (lucide Bot, циан) + статус «Онлайн» с зелёной точкой, диалог из пузырей bot→user→bot («Здравствуйте! Записать вас на завтра в 15:00?» / «Да, подходит.» / «Записано ✓…»), быстрые кнопки «Повторить запись / Изменить время», строка ввода с кнопкой ➤; bot-пузыри — голубоватые (bottom-left радиус 2px), user — циан-подсветка (bottom-right радиус 2px); analytics — тёмный дашборд с метриками (₽842 500, +24,8%, 8,4%) и столбчатым графиком за 7 месяцев; launch — тёмный лендинг с pill-надписью, крупным заголовком, orbit-рамкой и CTA «Начать сейчас». Иконки — lucide.
+- Блок деталей (.project-details): категория + номер сверху (категория окрашена в цвет обводки карточки), <h2> название, описание, список тегов .technology-tags (пилюли с рамкой --portfolio-line).
+- Футер .section-end: «СОЗДАНО С КОДОМ. УСИЛЕНО AI.» слева, «03 ПРОЕКТА» справа, сверху разделитель.
+
+6. СЕКЦИЯ «ЧТО Я ДЕЛАЮ» (src/components/services.tsx)
+- Обёртка <section className="services-section" id="services" aria-labelledby="services-title">; фон --background + ::before с затемнённым brick-wall (градиент поверх url('./assets/brick-wall.jpg')); сверху разделитель border-top 1px --portfolio-line; контент в .services-inner (max-width 1184px).
+- Шапка: eyebrow «ЧТО Я ДЕЛАЮ», <h2 id="services-title">Четыре <span>направления</span></h2> (слово «направления» — циан со свечением), подзаголовок «От быстрого MVP до автоматизации и интеграций — довожу идею до работающего продукта.».
+- Сетка .services-grid: 4 карточки .service-card (repeat(4, minmax(0,1fr)), gap 25px).
+- Карточки (массив данных; иконки — lucide: Rocket, Bot, Palette, Plug):
+  1) №01 «MVP за неделю» — «Собираю рабочий MVP за 7 дней — от идеи и прототипа до продукта в проде. Правки и новые фичи добавляю прямо в процессе, без многонедельных спринтов.» — ВЫГОДА: «Первый продукт в проде уже через неделю».
+  2) №02 «AI-автоматизация» — «Подключаю LLM и автой к вашим процессам: отчёты, ответы клиентов и рутинные задачи выполняются без участия человека. Каждый сценарий строю на проверяемых шагах с логами.» — ВЫГОДА: «−80% ручных операций».
+  3) №03 «UI/UX с вайбкодингом» — «Превращаю референсы и идеи в аккуратные интерфейсы прямо во время генерации. Дизайн-система, типографика и адаптив — часть процесса, а не надстройка после.» — ВЫГОДА: «Консистентный интерфейс на всех экранах».
+  4) №04 «Интеграции» — «Связываю CRM, платежи, Telegram и аналитику в один рабочий контур. Данные ходят между сервисами автоматически, без дублей и ручного переноса.» — ВЫГОДА: «Все инструменты работают как единое целое».
+- Структура карточки: .service-top (иконка в свечящемся квадрате 44px слева, номер справа), <h3> заголовок, .service-desc описание, .service-result (margin-top auto) — подпись «ВЫГОДА» мелким приглушённым + <b> с результатом.
+- Акценты по карточкам: 1 — циан, 2 — --neon-soft, 3 — --neon-red, 4 — --preview-green (обводка, свечение, цвет иконки и цвет результата через :nth-child).
+- Футер .section-end: «ВАЙБКОДИНГ · AI · ИНТЕГРАЦИИ» слева, «04 НАПРАВЛЕНИЯ» справа.
+
+7. СЕКЦИЯ «КАК Я РАБОТАЮ» (src/components/work-process.tsx)
+- Обёртка <section className="process-section" id="process" aria-labelledby="process-title">; фон --background + ::before с затемнённым brick-wall (градиент плотнее, чем в услугах: .74/.9); сверху разделитель border-top 1px --portfolio-line; контент в .process-inner (max-width 1184px).
+- Шапка: eyebrow «ПРОЦЕСС», <h2 id="process-title">Как я <span>работаю</span></h2> (слово «работаю» — циан со свечением), подзаголовок «Четыре шага от первого погружения в задачу до запуска и масштабирования продукта.».
+- Таймлайн .process-timeline: 4 шага .process-step (repeat(4, minmax(0,1fr)), gap 25px) — ГОРИЗОНТАЛЬНО на десктопе, ВЕРТИКАЛЬНО на ≤700px.
+- Шаги (массив данных, номера как строки):
+  1) №01 «Погружаюсь в задачу» — «Разбираю цель, аудиторию и ограничения. Фиксирую, какой результат нужен и как пойму, что он достигнут.»
+  2) №02 «Создаю с ИИ» — «Собираю прототип вместе с AI: интерфейс, логика, данные. От идеи до рабочей версии — без долгих спринтов.»
+  3) №03 «Тестирую и улучшаю» — «Проверяю ключевые сценарии на реальных данных, закрываю edge-кейсы и шлифую UX на каждой итерации.»
+  4) №04 «Запускаю и масштабирую» — «Вывожу продукт в прод, подключаю аналитику и интеграции. Дальше — развитие и рост нагрузки без переписывания.»
+- Структура шага: .process-node (круг 44px с номером, рамка/цвет/свечение в accent шага) + .process-body (карточка: рамка accent 1px, radius 8px, --portfolio-surface, мягкое свечение, ховер-подъём 5px в @media (hover:hover)); внутри <h3> заголовок и .process-desc описание (12px, --portfolio-muted).
+- Акценты шагов через --step-accent/--step-glow/--step-glow-hover/--step-next: 1 — циан, 2 — --neon-soft, 3 — --neon-red, 4 — --preview-green.
+- Коннектор: у каждого шага кроме последнего ::before — на десктопе горизонтальная линия (top 21px, left 44px, right -47px, height 1px) с градиентом accent шага → accent следующего (--step-next); на ≤700px становится вертикальной (top 44px, left 21px, width 1px, до низа шага) — точно стыкуется с узлом следующего шага.
+- Футер .section-end: «ПОГРУЖЕНИЕ · ГЕНЕРАЦИЯ · ТЕСТЫ · ЗАПУСК» слева, «04 ШАГА» справа.
+
+8. CTA-БЛОК «ОБСУДИТЬ ПРОЕКТ» (src/components/contact.tsx)
+- Замыкающая секция страницы, идёт ПОСЛЕ «Как я работаю». <section className="contact-section" id="contact" aria-labelledby="contact-title">: фон --background + ::before с затемнённым brick-wall (градиент .74/.9, как в процессе); сверху разделитель border-top 1px --portfolio-line; контент в .contact-inner (max-width 1184px).
+- Карточка .contact-card (max-width 780px, по центру, padding 44px): рамка --neon-cyan 1px, radius 8px, --portfolio-surface, мягкое свечение; содержимое по центру.
+- Надпись-заголовок .contact-title — <h2 id="contact-title"><span/>ОБСУДИТЬ ПРОЕКТ</h2>: 13px, 700, letter-spacing .16em, цвет --neon-cyan с мягким свечением (text-shadow) + светящаяся циан-точка <span/> 6px — визуально выделено, но без кричащего фона.
+- Текст .contact-text: «Выберите удобный мессенджер — отвечу в течение дня и предложу план работ.», 14px, --portfolio-muted, max-width 470px, по центру.
+- Действия .contact-actions — grid из 3 равных колонок (repeat(3, minmax(0,1fr)), gap 13px). Кнопки .contact-button (акцентные, ЗАМЕТНЫЕ): рамка и фон в accent канала, отчётливое внешнее свечение, шрифт 15px (700), padding 16px 18px; слева иконка в квадрате 44px (border/fill/свечение в accent), справа ArrowUpRight цветом accent. Ховер — подъём 4px и усиление свечения (@media (hover:hover)); focus-visible — обводка accent.
+- Каналы (иконки lucide): MAX (MessageCircle), Telegram (Send), E-mail (Mail). Акценты через :nth-child: 1 — --neon-cyan, 2 — --preview-green, 3 — --neon-soft (каждый канал задаёт пару --btn-accent/--btn-glow/--btn-glow-hover/--btn-bg).
+- Кнопки РАБОЧИЕ и сделаны как ссылки <a className="contact-button"> (text-decoration: none): MAX → https://max.ru/u/f9LHodD0cOJ0erOwDi7A9hlBczCNHP2uOXR5nNx8ZsgX20ITLo3Kuyvr08E, Telegram → https://t.me/vibecodesk (обе открываются в новой вкладке: target="_blank" rel="noopener noreferrer"), E-mail → mailto:korney290581@yandex.ru (открывает почтовый клиент с готовым письмом).
+
+9. АДАПТИВНОСТЬ (обязательно)
+- >1500px: HERO получает padding-top 150px; «Избранные проекты» — 145px; «Что я делаю», «Как я работаю» и CTA-блок — 112px.
+- 701–1000px: HERO — padding 96px 30px 70px, заголовок 40px, одна колонка (gap 38px), дашборд по центру (max-width 560px); «Избранные проекты» — padding 80px 30px, плотные отступы и размеры превью; «Что я делаю» — 2 карточки в ряд (gap 20px), padding 70px 30px; «Как я работаю» — 2 шага в ряд (gap 20px), padding 70px 30px, горизонтальный коннектор скрыт; CTA-блок — padding 70px 30px, карточка padding 34px 28px, иконки кнопок 40px.
+- ≤700px: HERO — одна колонка (текст, затем дашборд, gap 32px), заголовок 30px (строки .headline-item — gap 11px, пиктограммы .point-icon 30px), min-height auto, padding 62px 23px 40px; hero-кнопки на всю ширину столбиком (gap 11px, по центру); пилюли .hero-points — шрифт 10px, padding 7px 11px; дашборд на всю ширину, уменьшены внутренние отступы и кегли (KPI 15px, столбцы 96px, donut 64px). Остальные секции вертикальные — одна колонка карточек (max-width 430px, по центру), padding 58px 23px, заголовки 32–35px, eyebrow 8px, теги/футер мельче. «Как я работаю» — вертикальный таймлайн: один столбец, шаг в строку (узел 44px слева + карточка справа, gap 16px), вертикальный коннектор от узла к узлу. CTA-блок — padding 58px 23px 45px, карточка padding 30px 22px, кнопки в один столбец (gap 11px), текст 13px. Проверь, что на мобильном все карточки и кнопки идут столбиком и текст не обрезается.
+
+10. КАЧЕСТВО КОДА
+- Форматирование — prettier (printWidth 100), линтинг — eslint без ошибок (предупреждения react-refresh в ui-компонентах shadcn допустимы).
+- Тест Vitest: рендер маршрута «/» с проверкой заголовков секций.
+- Запуск проверок перед сдачей: npm run lint, npm run test, npm run build — все должны проходить.
+
+11. КНОПКА «НАВЕРХ» (src/components/back-to-top.tsx)
+- Плавающий элемент в правом нижнем углу (position: fixed; right 26px; bottom 26px; z-index 50; радиус 50%; 50×50px, на ≤700px 46×46px и right/bottom 18px).
+- Появляется при прокрутке вниз более чем на 1 экран (scrollY > innerHeight, слушатели scroll/resize, passive) и скрывается у самого верха; скрытое состояние — opacity 0 + visibility hidden, недоступна для таба (tabIndex -1).
+- Оформление в неоновом стиле с градиентом: неоновая градиентная обводка 1.5px (135deg: --neon-cyan -> --preview-green 45% -> --neon-soft) на тёмной заливке oklch(0.128 0.006 260) (padding-box + border-box), иконка ArrowUp в цвет --neon-cyan со свечением (drop-shadow); циан-свечение вокруг. Ховер — подъём вверх и усиление свечения (@media (hover:hover)); focus-visible — циан-обводка.
+- Клик плавно прокручивает к началу страницы (hero): window.scrollTo({ top: 0, behavior: 'smooth' }); при prefers-reduced-motion — behavior 'auto'. Анимации появления/исчезновения отключаются при reduced-motion.
