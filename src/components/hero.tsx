@@ -1,4 +1,5 @@
 import { ArrowRight, Bot, ChartNoAxesCombined, Check, LayoutGrid, Plug, Zap } from "lucide-react";
+import { ChatQrButton } from "@/components/chat-qr-button";
 
 const points = [
   "Первый результат уже через 3 дня",
@@ -138,6 +139,8 @@ export function Hero() {
               </li>
             ))}
           </ul>
+
+          <ChatQrButton variant="hero" />
         </div>
 
         <HeroDashboard />

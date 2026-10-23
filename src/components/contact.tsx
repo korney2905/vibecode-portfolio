@@ -1,4 +1,5 @@
 import { ArrowUpRight, Mail, MessageCircle, Send } from "lucide-react";
+import { ChatQrButton } from "@/components/chat-qr-button";
 
 const channels = [
   {
@@ -37,6 +38,10 @@ export function Contact() {
                 <ArrowUpRight size={17} aria-hidden="true" />
               </a>
             ))}
+          </div>
+
+          <div className="contact-qr">
+            <ChatQrButton variant="contact" />
           </div>
         </div>
       </div>

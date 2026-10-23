@@ -377,3 +377,21 @@
 @media(max-width:1000px) and (min-width:701px) { .process-section { padding: 40px 30px 40px; }.process-timeline { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 20px; }.process-step:not(:last-child)::before { display: none; }.process-header h2 { font-size: 36px; } }
 @media(max-width:700px) { .process-section { padding: 24px 23px 24px; }.process-header { margin-bottom: 32px; }.process-header h2 { font-size: 32px; max-width: 350px; margin: 17px 0 14px; }.process-header>p { font-size: 12px; max-width: 300px; }.process-timeline { grid-template-columns: minmax(0, 1fr); gap: 0; }.process-step { flex-direction: row; align-items: flex-start; gap: 16px; padding-bottom: 26px; }.process-step:last-child { padding-bottom: 0; }.process-step:not(:last-child)::before { top: 44px; left: 21px; right: auto; bottom: 0; width: 1px; height: auto; background: linear-gradient(180deg, var(--step-accent), var(--step-next, var(--portfolio-line))); }.process-body { padding: 20px 18px 22px; }.process-step h3 { font-size: 20px; } }
 @media(prefers-reduced-motion:reduce) { .process-body { transition: none; }.process-body:hover { transform: none; } }
+
+/* QR-кнопка чат-бота AI-Проекты */
+.chat-qr { display: inline-flex; align-items: center; gap: 16px; max-width: 100%; padding: 14px; border: 1px solid var(--neon-cyan); border-radius: 12px; background: var(--portfolio-surface); color: var(--foreground); font-family: var(--portfolio-font); text-align: left; text-decoration: none; box-shadow: 0 0 16px oklch(0.85 0.15 190 / .16), inset 0 0 12px oklch(0.85 0.15 190 / .03); transition: transform .2s, box-shadow .2s, border-color .2s; }
+.chat-qr:focus-visible { outline: 2px solid var(--neon-cyan); outline-offset: 3px; }
+.chat-qr-code { flex: none; display: block; padding: 8px; border-radius: 8px; background: #fff; box-shadow: 0 0 0 1px oklch(0.85 0.15 190 / .35), 0 0 18px oklch(0.85 0.15 190 / .14); }
+.chat-qr-code img { display: block; width: 164px; height: 164px; }
+.chat-qr-meta { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
+.chat-qr-label { display: inline-flex; align-items: center; gap: 7px; font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--neon-cyan); }
+.chat-qr-label svg { flex: none; }
+.chat-qr-handle { font-size: 18px; font-weight: 800; line-height: 1.2; letter-spacing: -.01em; color: var(--foreground); transition: color .2s, text-shadow .2s; }
+.chat-qr-url { font-size: 13px; font-weight: 700; line-height: 1.4; color: var(--neon-cyan); }
+.chat-qr-hint { font-size: 10px; line-height: 1.4; color: var(--portfolio-muted); }
+.chat-qr-hero { margin-top: 24px; }
+.contact-qr { display: flex; justify-content: center; margin-top: 22px; }
+@media (hover:hover) { .chat-qr:hover { transform: translateY(-3px); border-color: oklch(0.9 0.1 190); box-shadow: 0 0 30px oklch(0.85 0.15 190 / .4); }.chat-qr:hover .chat-qr-handle { color: var(--neon-cyan); text-shadow: 0 0 16px oklch(0.85 0.15 190 / .4); } }
+@media(max-width:700px) { .chat-qr { gap: 13px; padding: 12px; }.chat-qr-code { padding: 7px; }.chat-qr-code img { width: 123px; height: 123px; }.chat-qr-handle { font-size: 16px; }.chat-qr-url { font-size: 12px; }.chat-qr-hint { font-size: 9px; }.chat-qr-hero { margin-top: 22px; }.contact-qr { margin-top: 18px; } }
+@media(max-width:520px) { .chat-qr { width: 100%; flex-direction: column; align-items: stretch; gap: 12px; padding: 14px; text-align: center; }.chat-qr-meta { align-items: center; }.chat-qr-code { align-self: center; }.chat-qr-code img { width: 164px; height: 164px; }.chat-qr-url { font-size: 13px; }.chat-qr-hint { font-size: 10px; } }
+@media(prefers-reduced-motion:reduce) { .chat-qr, .chat-qr-handle { transition: none; }.chat-qr:hover { transform: none; } }
