@@ -9,13 +9,13 @@ import { WorkProcess } from "@/components/work-process";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Избранные проекты — Вайбкодинг-портфолио" },
+      { title: "AI-Проекты" },
       {
         name: "description",
         content:
           "StudyFlow, НейроАналитик и LaunchPro — избранные AI- и веб-проекты специалиста по вайбкодингу.",
       },
-      { property: "og:title", content: "Избранные проекты — Вайбкодинг-портфолио" },
+      { property: "og:title", content: "AI-Проекты" },
       {
         property: "og:description",
         content: "Три идеи, ставшие цифровыми продуктами: обучение, аналитика и запуск продукта.",

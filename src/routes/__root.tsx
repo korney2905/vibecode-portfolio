@@ -78,9 +78,9 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Вайбкодинг-портфолио" },
+      { title: "AI-Проекты" },
       { name: "description", content: "Портфолио цифровых продуктов и AI-проектов." },
-      { property: "og:title", content: "Вайбкодинг-портфолио" },
+      { property: "og:title", content: "AI-Проекты" },
       { property: "og:description", content: "Портфолио цифровых продуктов и AI-проектов." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
